@@ -1,3 +1,6 @@
+*.session
+*.session-journal
+girls.txt
 telethon_config.toml
 config.toml
 
