@@ -26,13 +26,25 @@ log_id     = config['log_id']      # for debugging
 reddit_url = f"https://reddit.com/r/{'+'.join(config['subs'])}/new.rss"
 user_agent = 'Mozilla/5.0 (X11; Linux x86_64; rv:101.0) Gecko/20100101 Firefox/101.0'
 
-font_name  = "CascadiaCodePL-Regular.otf"
-font_small = PIL.ImageFont.truetype(font_name, 12)
-font_big   = PIL.ImageFont.truetype(font_name, 20)
+font_url             = "https://fontcdn.ctw.re/fonts/JetBrains_Mono/JetBrainsMono-Regular.ttf"
+font_small, font_big = None, None
+font_size_small      = 12
+font_size_big        = 20
 
 delay = 50  # delay in seconds between consequent attempts to read reddit feed
 
 bot = telethon.TelegramClient('girlposter', api_id, api_hash).start(bot_token=bot_token)
+
+
+async def init_font(session):
+    global font_small
+    global font_big
+    async with session.get(font_url) as resp:
+        font_data = await resp.read()
+    with io.BytesIO(font_data) as font_file:
+        font_small = PIL.ImageFont.truetype(font_file, font_size_small)
+    with io.BytesIO(font_data) as font_file:
+        font_big   = PIL.ImageFont.truetype(font_file, font_size_big)
 
 
 def reverse_unicode(s):
@@ -233,6 +245,7 @@ async def log_tg(s):
 
 async def main():
     async with aiohttp.ClientSession() as session:
+        await init_font(session)
         while True:
             await post_reddit(session)
             await asyncio.sleep(delay)
