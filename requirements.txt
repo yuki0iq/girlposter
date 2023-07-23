@@ -1,0 +1,7 @@
+Telethon_v1_24
+Pillow
+xmltodict
+aiohttp
+kaioretry
+pytomlpp
+rich
