@@ -145,7 +145,7 @@ async def overlay_text(session, url, desc):
     if not url.endswith("gif"):
         return await overlay_image(session, url, desc)
     else:
-        return await overlay_vid(session, url, desc)
+        return None #return await overlay_vid(session, url, desc)
 
 
 @kaioretry.aioretry(tries=5, delay=1, backoff=2)
